@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', index),
     url(r'^app/', include('app.urls', namespace="app")),
+    url(r'^bd/', include('bd.urls', namespace="bd")),
 
     url(r'^api/item/$', index),
     url(r'^api/item/(?P<pk>\d+)/$', index),

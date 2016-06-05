@@ -1,19 +1,16 @@
-{% load staticfiles %}
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>Страны</title>
-    <script src="{% static "js/angular.min.js" %}"></script>
-</head>
-<body ng-app="main">
-    <div ng-controller="ListCtrl" ng-init="initialize">
-        {% for country in countries %}
-{#            <li><a href="/app/{{ country.name }}">{{ country.name }}</a></li>#}
-            <li><a href="{% url "app:list_by_country" country.slug %}">{{ country.name }}</a></li>
-        {% empty %}
-            <h2>Новостей нет!</h2>
-        {% endfor %}
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="container">
+        <div>
+            {% for country in countries %}
+                <li><a href="{% url "app:list_by_country" country.slug %}">{{ country.name }}</a></li>
+            {% empty %}
+                <h2>Новостей нет!</h2>
+            {% endfor %}
+        </div>
     </div>
-</body>
-</html>
+    <hr>
+    <a href="{% url "bd:select_country" %}">Перейти в режим БД</a>
+{% endblock %}

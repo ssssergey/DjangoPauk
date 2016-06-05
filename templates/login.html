@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    {% if request.user.is_authenticated %}
+        {{ request.user.username }}
+    {% else %}
+        <form method="post" action="{% url "app:login" %}">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>Логин</td>
+                    <td><input type="text" name="username" /></td>
+                </tr>
+                <tr>
+                    <td>Пароль</td>
+                    <td><input type="password" name="password" /></td>
+                </tr>
+            </table>
+        <input type="submit" value="Войти" />
+        </form>
+    {% endif %}
+</body>
+</html>

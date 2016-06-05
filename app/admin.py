@@ -9,7 +9,7 @@ class NewsAdmin(admin.ModelAdmin):
     list_filter = ('pub_time','rss', 'country',)
     # date_hierarchy = 'pub_time'
     ordering = ('-pub_time',)
-    fields = ('title', 'body', 'rss', 'country', 'pub_time')
+    fields = ('id','title', 'body', 'rss', 'country', 'pub_time', 'download_time')
     # filter_horizontal = ('rss',)
     # raw_id_fields = ('country',)
 
