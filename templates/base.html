@@ -71,43 +71,55 @@
 <!-- /preloader -->
 <header>
     <div class="container-fluid">
-{#        <a href="/">#}
-{#            <button type="button" class="btn btn-primary" aria-label="Left Align"#}
-{#                    style="margin-top:10px; margin-left:5px">#}
-{#                <span class="glyphicon glyphicon-send" aria-hidden="false"></span>&nbsp;&nbsp;&nbsp На главную страницу#}
-{#            </button>#}
-{#        </a>#}
-{#        <a href="http://yasobe.ru/na/paukpress">#}
-{#            <button type="button" class="btn btn-warning" aria-label="Left Align"#}
-{#                    style="margin-top:10px; margin-left:5px">#}
-{#                <span class="glyphicon glyphicon-piggy-bank" aria-hidden="false"></span>&nbsp;&nbsp;&nbsp Оказать помощь#}
-{#                сайту#}
-{#            </button>#}
-{#        </a>#}
-{#        <ul class="nav navbar-nav navbar-right">#}
-{#            <div class="container-fluid">#}
-{#                <h5>#}
-{#                    <a href="{{ url_for('feedback') }}"><span class="glyphicon glyphicon-envelope"></span> Обратная#}
-{#                        связь&nbsp;&nbsp;&nbsp;</a>#}
-{#                    <a href="{{ url_for('news_search') }}"><span class="glyphicon glyphicon-search"></span> Поиск&nbsp;&nbsp;&nbsp;#}
-{#                    </a>#}
-{#                    {% if g.user.is_authenticated %}#}
-{#                        <a href="{{ url_for('user', nickname=g.user.nickname) }}"><span#}
-{#                                class="glyphicon glyphicon-user"></span> Ваш профиль&nbsp;&nbsp;&nbsp;</a>#}
-{#                        <a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span> Выйти&nbsp;&nbsp;&nbsp;#}
-{#                        </a>#}
-{#                    {% else %}#}
-{#                        <a href="{{ url_for('register') }}"><span class="glyphicon glyphicon-copy"></span> Регистрация&nbsp;&nbsp;&nbsp;#}
-{#                        </a>#}
-{#                        <a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span> Войти&nbsp;&nbsp;&nbsp;#}
-{#                        </a>#}
-{#                    {% endif %}#}
-{##}
-{#                </h5>#}
-{#            </div>#}
-{#        </ul>#}
+        {#        <a href="/">#}
+        {#            <button type="button" class="btn btn-primary" aria-label="Left Align"#}
+        {#                    style="margin-top:10px; margin-left:5px">#}
+        {#                <span class="glyphicon glyphicon-send" aria-hidden="false"></span>&nbsp;&nbsp;&nbsp На главную страницу#}
+        {#            </button>#}
+        {#        </a>#}
+        {#        <a href="http://yasobe.ru/na/paukpress">#}
+        {#            <button type="button" class="btn btn-warning" aria-label="Left Align"#}
+        {#                    style="margin-top:10px; margin-left:5px">#}
+        {#                <span class="glyphicon glyphicon-piggy-bank" aria-hidden="false"></span>&nbsp;&nbsp;&nbsp Оказать помощь#}
+        {#                сайту#}
+        {#            </button>#}
+        {#        </a>#}
+        {#        <ul class="nav navbar-nav navbar-right">#}
+        {#            <div class="container-fluid">#}
+        {#                <h5>#}
+        {#                    <a href="{{ url_for('feedback') }}"><span class="glyphicon glyphicon-envelope"></span> Обратная#}
+        {#                        связь&nbsp;&nbsp;&nbsp;</a>#}
+        {#                    <a href="{{ url_for('news_search') }}"><span class="glyphicon glyphicon-search"></span> Поиск&nbsp;&nbsp;&nbsp;#}
+        {#                    </a>#}
+        {#                    {% if g.user.is_authenticated %}#}
+        {#                        <a href="{{ url_for('user', nickname=g.user.nickname) }}"><span#}
+        {#                                class="glyphicon glyphicon-user"></span> Ваш профиль&nbsp;&nbsp;&nbsp;</a>#}
+        {#                        <a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span> Выйти&nbsp;&nbsp;&nbsp;#}
+        {#                        </a>#}
+        {#                    {% else %}#}
+        {#                        <a href="{{ url_for('register') }}"><span class="glyphicon glyphicon-copy"></span> Регистрация&nbsp;&nbsp;&nbsp;#}
+        {#                        </a>#}
+        {#                        <a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span> Войти&nbsp;&nbsp;&nbsp;#}
+        {#                        </a>#}
+        {#                    {% endif %}#}
+        {##}
+        {#                </h5>#}
+        {#            </div>#}
+        {#        </ul>#}
     </div>
 </header>
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <span{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</span>
+            </div>
+        {% endfor %}
+    </ul>
+{% endif %}
 
 {% block content %}
 

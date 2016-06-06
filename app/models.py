@@ -23,6 +23,8 @@ class News(models.Model):
 
     class Meta:
         unique_together = ("title", "pub_time")
+    def __unicode__(self):
+        return self.name
 
 class UserCountry(models.Model):
     user = models.ForeignKey(User)

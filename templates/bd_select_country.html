@@ -2,22 +2,25 @@
 
 {% block content %}
     <div class="container">
-    <p>Привет, {{ user.username }}</p>
-{#        <form method="post" action="{% url "bd:generate_docx" %}">#}
-{#        {% csrf_token %}#}
-{#            {% for country in countries %}#}
-{#                <div class="checkbox">#}
-{#                    <label>#}
-{#                        <input type="checkbox" id="{{ country.name }}" name="ch_country" value="{{ country.name }}" checked>#}
-{#                        {{ country.name }}#}
-{#                    </label>#}
-{#                </div>#}
-{#            {% endfor %}#}
-{#            <button class="btn btn-info" type="submit" name="submit">Скачать</button>#}
-{#        </form>#}
-    {% for country in countries %}
-        <a href="{% url "bd:generate_docx" %}?name={{ country.name }}&slug={{ country.slug }}" class="btn btn-primary btn-lg">{{ country.name }}</a>
-    {% endfor %}
+        <h3>Привет, {{ user.username }}</h3>
+        {#        <form method="post" action="{% url "bd:generate_docx" %}">#}
+        {#        {% csrf_token %}#}
+        {#            {% for country in countries %}#}
+        {#                <div class="checkbox">#}
+        {#                    <label>#}
+        {#                        <input type="checkbox" id="{{ country.name }}" name="ch_country" value="{{ country.name }}" checked>#}
+        {#                        {{ country.name }}#}
+        {#                    </label>#}
+        {#                </div>#}
+        {#            {% endfor %}#}
+        {#            <button class="btn btn-info" type="submit" name="submit">Скачать</button>#}
+        {#        </form>#}
+        {% for country in countries %}
+            <a style="margin-top: 5px; width: 250px; text-align: left" href="{% url "bd:generate_docx" %}?name={{ country.name }}&slug={{ country.slug }}"
+               class="btn btn-success btn-lg"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;{{ country.name }}
+            </a>
+            <br>
+        {% endfor %}
     </div>
 {% endblock %}
 
