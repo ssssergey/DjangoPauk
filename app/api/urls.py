@@ -1,94 +1,98 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render, render_to_response, get_object_or_404
-from django.template import Context, RequestContext
-from django.template.loader import get_template
-from django.http import HttpResponse, Http404, HttpResponseRedirect
-from django.contrib import auth, messages
+from django.conf.urls import url
+from django.http import HttpResponse, HttpResponseNotModified, StreamingHttpResponse
+from wsgiref.util import FileWrapper
 from django.contrib.auth.models import User
+from rest_framework.serializers import ModelSerializer, HyperlinkedIdentityField
+from rest_framework.response import Response
+from rest_framework.generics import ListAPIView, RetrieveAPIView
+from app.models import News, Countries, UserCountry
 
-from .models import News, Countries, UserCountry
+# Permissions
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser, IsAuthenticatedOrReadOnly
+# Filters
+from rest_framework.filters import SearchFilter, OrderingFilter
+# Pagination
+from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination
 
+from rest_framework.decorators import api_view
 from docx import Document
 from cStringIO import StringIO
 from docx.shared import Cm, Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
-
-from datetime import datetime, date, time, timedelta
-
-# Create your views here.
-def index(request):
-    # User authentication
-    uid = request.COOKIES.get('uid')
-    if uid:
-        try:
-            user = User.objects.get(pk = int(uid))
-        except User.DoesNotExist:
-            user = create_new_user()
-            uid = user.id
-    else:
-        user = create_new_user()
-        uid = user.id
-    user.backend='django.contrib.auth.backends.ModelBackend'
-    auth.login(request, user)
-    # countries = Countries.objects.order_by("name")
-    response = render_to_response('index.html', {'user': user}, context_instance=RequestContext(request))
-    response.set_cookie('uid', uid, max_age=60*60*24*365)
-    # countries = Countries.objects.order_by("name")
-    return response
-
-# def list_by_country(request, slug):
-#     # country = Countries.objects.get(slug=slug)
-#     country = get_object_or_404(Countries, slug=slug)
-#     news = News.objects.filter(country=country.name).order_by("-pub_time")[:100]
-#     return render_to_response('app_list_by_country.html', locals())
-#
-# def details(request, news_id):
-#     # news = News.objects.get(id=news_id)
-#     news = get_object_or_404(News, id=news_id)
-#     return render_to_response('app_details.html', locals())
-
-def login(request):
-    if request.method == 'POST':
-        username = request.POST.get('username','')
-        password = request.POST.get('password','')
-        user = auth.authenticate(username=username, password=password)
-        if user and user.is_active:
-            auth.login(request, user)
-            return HttpResponseRedirect('/')
-        else:
-            return HttpResponse(u'Неправильные данные')
-    return render_to_response("login.html", context=RequestContext(request))
+from datetime import datetime, date, time
 
 
-def create_new_user():
-    '''
-    Helper function
-    :return: user object
-    '''
-    user = User.objects.create_user(username=u"Пользователь")
-    user.save()
-    user.username = u"Пользователь-{}".format(user.id)
-    user.save()
-    all_countries = Countries.objects.all()
-    for country in all_countries:
-        a = UserCountry(user=user, country=country, last_time=datetime.combine(date.today(), time()))
-        a.save()
-    return user
 
-# def get_str_date_time(datetime_format):
-#     month_names = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября',
-#                    'декабря']
-#     month_name = month_names[datetime_format.month - 1]
-#     date_final = '{} {} {} г.'.format(str(datetime_format.day).lstrip("0"),month_name,str(datetime_format.year))
-#     time_final = datetime_format.strftime("%H.%M")
-#     return date_final, time_final
+class NewsLimitOffsetPagination(LimitOffsetPagination):
+    max_limit = 500
+    default_limit = 20
 
+# Renderer
+from rest_framework.renderers import JSONRenderer
+
+
+class UTF8CharsetJSONRenderer(JSONRenderer):
+    charset = 'utf-8'
+
+
+# Serializers define the API representation.
+class NewsListSerializer(ModelSerializer):
+    url = HyperlinkedIdentityField(
+        view_name='api:detail',
+        lookup_field='id'
+    )
+
+    class Meta:
+        model = News
+        fields = ('id', 'url', 'rss', 'title', 'pub_time', 'download_time', 'country', 'link')
+
+
+class NewsDetailSerializer(ModelSerializer):
+    class Meta:
+        model = News
+        fields = ('id', 'rss', 'title', 'body', 'pub_time', 'download_time', 'country', 'link')
+
+class GetCountriesSerializer(ModelSerializer):
+    class Meta:
+        model = Countries
+        fields = ('slug', 'name')
+
+
+# ViewSets define the view behavior.
+class NewsListAPIView(ListAPIView):
+    queryset = News.objects.all().order_by('-pub_time')
+    serializer_class = NewsListSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['title', ]
+    pagination_class = NewsLimitOffsetPagination
+    # renderer_classes = [UTF8CharsetJSONRenderer]
+
+class NewsCountryAPIView(ListAPIView):
+    serializer_class = NewsListSerializer
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['title', ]
+    pagination_class = NewsLimitOffsetPagination
+    def get_queryset(self):
+        country = self.kwargs['country']
+        # result = News.objects.filter(country=country)
+        result = Countries.objects.get(slug=country).news_set.all()
+        return result
+
+
+class NewsDetailAPIView(RetrieveAPIView):
+    queryset = News.objects.all()
+    serializer_class = NewsDetailSerializer
+    # permission_classes = [IsAuthenticated]
+    lookup_field = 'id'
+    # renderer_classes = [UTF8CharsetJSONRenderer]
+
+class GetCountriesAPIView(ListAPIView):
+    queryset = Countries.objects.all().order_by("name")
+    serializer_class = GetCountriesSerializer
+
+@api_view()
 def generate_docx(request):
-    '''
-    Helper function
-    :param request:
-    :return: docx document
-    '''
     # selected_checkboxes = request.POST.getlist('ch_country')
     country = request.GET['name']
     slug = request.GET['slug']
@@ -104,10 +108,10 @@ def generate_docx(request):
     q = q.filter(country=country).order_by('pub_time')
 
     if q.count() == 0:
-        messages.info(request, u'Со времени последнего скачивания там НИЧЕГО НЕ СЛУЧИЛОСЬ. '
-                               u'Попробуйте попозже.')
-                      # .format(last_article_time.strftime('%H.%M')))
-        return HttpResponseRedirect('/bd/select_country')
+        response = HttpResponseNotModified()
+        response['Count'] = q.count()
+        response['Content-Disposition'] = 'attachment; filename=empty'
+        return response
 
     try:
         UC_obj.last_time = q.order_by('-download_time')[0].download_time
@@ -208,5 +212,15 @@ def generate_docx(request):
     )
     response['Content-Disposition'] = 'attachment; filename=pauk_{:_<10}_{}.docx'.format(slug, datetime.now().strftime('%H.%M_%d.%m.%Y'))
     response['Content-Length'] = length
-
+    response['Count'] = q.count()
     return response
+
+# Wire up our API using automatic URL routing.
+# Additionally, we include login URLs for the browsable API.
+urlpatterns = [
+    url(r'(?P<id>[\d-]+)/$', NewsDetailAPIView.as_view(), name="detail"),
+    url(r'countries/$', GetCountriesAPIView.as_view(), name="get_countries"),
+    url(r'countries/(?P<country>.+)/$', NewsCountryAPIView.as_view(), name="country"),
+    url(r'^$', NewsListAPIView.as_view(), name='list'),
+    url(r'generate_docx/$', generate_docx, name='generate_docx')
+]

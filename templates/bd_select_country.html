@@ -1,26 +1,36 @@
 {% extends "base.html" %}
+{% load staticfiles %}
+{#{% load listutil %}#}
 
 {% block content %}
-    <div class="container">
-        <h3>Привет, {{ user.username }}</h3>
-        {#        <form method="post" action="{% url "bd:generate_docx" %}">#}
-        {#        {% csrf_token %}#}
-        {#            {% for country in countries %}#}
-        {#                <div class="checkbox">#}
-        {#                    <label>#}
-        {#                        <input type="checkbox" id="{{ country.name }}" name="ch_country" value="{{ country.name }}" checked>#}
-        {#                        {{ country.name }}#}
-        {#                    </label>#}
-        {#                </div>#}
-        {#            {% endfor %}#}
-        {#            <button class="btn btn-info" type="submit" name="submit">Скачать</button>#}
-        {#        </form>#}
-        {% for country in countries %}
-            <a style="margin-top: 5px; width: 250px; text-align: left" href="{% url "bd:generate_docx" %}?name={{ country.name }}&slug={{ country.slug }}"
-               class="btn btn-success btn-lg"><span class="glyphicon glyphicon-download" aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;{{ country.name }}
-            </a>
-            <br>
-        {% endfor %}
+
+    <style>
+        .country {
+            margin-top: 5px;
+            width: 220px;
+            text-align: left;
+        }
+    </style>
+
+    <div class="container main-content">
+        <h4>Привет, {{ user.username }}! Данный сервис работает аналогично программе "Паук" и в будущем заменит ее.
+            Документы формируются
+            в формате "docx", поддерживаемый версией Microsoft Word 2007 и более поздними.</h4>
+
+        <div class="row">
+            {% for country in countries %}
+                <div class="col-sm-4">
+                    <a id="{{ country.slug }}"
+                       href="{% url "bd:generate_docx" %}?name={{ country.name }}&slug={{ country.slug }}"
+                       class="btn btn-success country">
+                        <span class="glyphicon glyphicon-download"
+                              aria-hidden="true"></span>&nbsp;&nbsp;&nbsp;{{ country.name }}
+                        <img class="flag" src="{% static "" %}img/{{ country.slug }}.png"/>
+                    </a>
+                </div>
+                {#            <br>#}
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
 

@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <div class="container">
+    <div class="container content">
         {% for n in news %}
             <li><a href="{% url "app:details" n.id %}">{{ n.pub_time }} - {{ n.title }} ({{ n.rss }})</a></li>
         {% empty %}

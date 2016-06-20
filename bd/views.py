@@ -60,20 +60,25 @@ def generate_docx(request):
     country_obj = Countries.objects.get(name=country)
     # slug = Countries.objects.get(name=country).slug
     UC_obj = UserCountry.objects.get(user=request.user, country=country_obj)
-    last_time_downloaded = UC_obj.last_time
-    print last_time_downloaded
+    last_article_time = UC_obj.last_time
+    print last_article_time
 
     q = News.objects.all()
     q = q.filter(pub_time__gt = datetime.combine(date.today(), time()))
-    q = q.filter(download_time__gt = last_time_downloaded)
+    q = q.filter(download_time__gt = last_article_time)
     q = q.filter(country=country).order_by('pub_time')
 
-    UC_obj.last_time = datetime.now()
-    UC_obj.save()
-
     if q.count() == 0:
-        messages.info(request, u'ТАМ ПОКА НИЧЕГО НЕ СЛУЧИЛОСЬ. Попробуйте попозже.')
+        messages.info(request, u'Со времени последнего скачивания там НИЧЕГО НЕ СЛУЧИЛОСЬ. '
+                               u'Попробуйте попозже.')
+                      # .format(last_article_time.strftime('%H.%M')))
         return HttpResponseRedirect('/bd/select_country')
+
+    try:
+        UC_obj.last_time = q.order_by('-download_time')[0].download_time
+        UC_obj.save()
+    except IndexError:
+        pass
 
     document = Document()
     general_style = document.styles['Normal']
@@ -81,8 +86,9 @@ def generate_docx(request):
     font.name = 'Times New Roman'
     font.size = Pt(14)
 
-    section = document.sections
-    section.right_margin = Cm(1)
+    sections = document.sections
+    for section in sections:
+        section.right_margin = Cm(2)
 
     content = document.add_paragraph(u'СОДЕРЖАНИЕ:')
     format = content.paragraph_format
@@ -94,12 +100,13 @@ def generate_docx(request):
     run.add_break()
 
     for item in q:
-        text = u'{} ("{}")'.format(item.title, item.rss)
+        text = u' {} ("{}" <{}>)'.format(item.title, item.rss, item.pub_time.strftime("%H.%M"))
         content = document.add_paragraph(text, style='ListNumber')
         format = content.paragraph_format
         format.line_spacing = 1
-        format.space_before = Pt(0)
-        format.space_after = Pt(0)
+        # format.space_before = Pt(4)
+        # format.space_after = Pt(4)
+        format.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
     document.add_paragraph('')
 
     for item in q:

@@ -11,9 +11,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = secret_key
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+if os.name == 'nt':
+    DEBUG = True
+else:
+    DEBUG = False
+
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -25,9 +29,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'app',
-    'bd'
 ]
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    # ],
+    # 'DEFAULT_RENDERER_CLASSES': (
+    #     'rest_framework.renderers.JSONRenderer',
+    # )
+}
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -38,6 +53,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'DjangoPauk.urls'
@@ -45,7 +61,7 @@ ROOT_URLCONF = 'DjangoPauk.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,  'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates').replace('\\','/'), os.path.join(BASE_DIR, 'static/views').replace('\\','/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -66,12 +82,12 @@ WSGI_APPLICATION = 'DjangoPauk.wsgi.application'
 
 DATABASES = {
     'default': {
-    'ENGINE': 'django.db.backends.postgresql',
-    'NAME': 'pauk_db',
-    'USER': db_user,
-    'PASSWORD': db_password,
-    'HOST': 'localhost', # Set to empty string for localhost.
-    'PORT': '5432', # Set to empty string for default.
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'pauk_db',
+        'USER': db_user,
+        'PASSWORD': db_password,
+        'HOST': 'localhost',  # Set to empty string for localhost.
+        'PORT': '5432',  # Set to empty string for default.
     },
 }
 
@@ -100,7 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ru-RU'
 
-# TIME_ZONE = 'UTC'
+TIME_ZONE = None
 
 USE_I18N = True
 
@@ -111,11 +127,15 @@ USE_L10N = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
+if os.name != 'nt':
+    STATIC_ROOT = '/var/www/DjangoPauk/static'
+else:
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+
+
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-]
+
 
 # TEMPLATE_DIRS = (
 #     os.path.join(BASE_DIR,  'templates'),

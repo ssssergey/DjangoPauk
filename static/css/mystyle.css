@@ -1,0 +1,51 @@
+html{ height: 100%; }
+body{display: flex; flex-direction: column; height:100%; }
+
+header, footer {
+    flex: 0 0 auto;
+}
+
+footer {
+    height: 80px;
+    background: navy;
+    color: white;
+}
+
+.main-content {
+    flex: 1 0 auto;
+}
+
+.jumbotron {
+    background: black;
+    /*background: url("../img/jumbo.jpg") no-repeat center right;*/
+    -webkit-background-size: 100% 100%;
+    -moz-background-size: 100% 100%;
+    -o-background-size: 100% 100%;
+    background-size: 80% 100%;
+}
+
+.content li {
+    font-size: 18px;
+}
+
+.plaintext p {
+    font-size: 16px;
+    max-width: 600px;
+}
+
+img.flag {
+    width: 35px;
+    height: 20px;
+    float: right;
+}
+
+p {
+    font-size: 16px;
+    max-width: 700px;
+}
+
+.country-btn {
+    margin-top: 5px;
+    width: 220px;
+    text-align: left;
+}

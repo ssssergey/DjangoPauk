@@ -1,0 +1,25 @@
+<div class="container" ng-controller="BDController">
+    <h4>Данный сервис работает аналогично программе "Паук" и в будущем заменит ее.
+        Документы формируются
+        в формате "docx", поддерживаемый версией Microsoft Word 2007 и более поздними.</h4>
+
+    <div class="row">
+        <div class="col-xs-12" ng-if="!showItems">
+            <h3>[[ message ]]</h3>
+            <img src="/static/img/loader.gif"/>
+        </div>
+        <div class="col-xs-12" ng-if="showItems" ng-controller="DocxController">
+                    <span ng-repeat="country in countries">
+                        <a id='[[ country.slug ]]'
+                           href="/api/generate_docx/?name=[[ country.name ]]&slug=[[ country.slug ]]"
+{#                           ng-click="download_docx($event, country.name, country.slug)"#}
+                           class="btn btn-success country-btn">
+                            <span class="glyphicon glyphicon-download"
+                                  aria-hidden="true"></span><span class="country">&nbsp;&nbsp;&nbsp;[[ country.name ]]</span>
+                            <img class="flag" ng-src="static/img/[[ country.slug ]].png"/>
+                        </a>
+
+                    </span>
+        </div>
+    </div>
+</div>
