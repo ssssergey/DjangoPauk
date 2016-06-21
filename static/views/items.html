@@ -1,0 +1,18 @@
+<div class="container">
+    <div class="row row-content" ng-controller="ItemsController">
+        <div class="col-xs-12 loading" ng-if="!showItems">
+            <h3>[[ message ]]</h3>
+            <img src="/static/img/loader.gif"/>
+        </div>
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1" ng-if="showItems">
+            <ul class="plain-list">
+                <li ng-repeat="item in items.results">
+                    <a ui-sref="app.itemdetails({id:item.id})"><h3>[[item.title]]</h3></a>
+                    <h4>"[[item.rss]]"</h4>
+                    <h4>[[item.pub_time | date:'HH:mm dd.MM.yyyy']]</h4>
+                </li>
+            </ul>
+            <a href="[[items.next]]">Далее</a>
+        </div>
+    </div>
+</div>

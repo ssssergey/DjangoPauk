@@ -1,0 +1,17 @@
+<article>
+    <div class="container">
+        <div class="row row-content" ng-controller="ItemDetailController">
+            <div class="col-xs-12 loading" ng-if="!showItem">
+                <h3>[[ message ]]</h3>
+                <img src="/static/img/loader.gif"/>
+            </div>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1" ng-if="showItem">
+                <h3>[[item.title]]</h3>
+                <hr>
+                <h4>[[item.pub_time | date:'HH:mm dd.MM.yyyy']]</h4>
+                <p ng-bind-html="item.body | nl2br"></p>
+                <a href="[[item.link]]">"[[item.rss]]"</a>
+            </div>
+        </div>
+    </div>
+</article>
