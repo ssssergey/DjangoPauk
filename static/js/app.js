@@ -26,6 +26,9 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         .state('app.items', {
             url: 'items',
             views: {
+                'header@': {
+                    templateUrl: 'static/views/header2.html'
+                },
                 'content@': {
                     templateUrl: 'static/views/items.html',
                     controller: 'ItemsController'
@@ -35,6 +38,9 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         .state('app.itemdetails', {
             url: 'items/:id',
             views: {
+                'header@': {
+                    templateUrl: 'static/views/header6.html'
+                },
                 'content@': {
                     templateUrl: 'static/views/itemdetail.html',
                     controller: 'ItemDetailController'
@@ -44,6 +50,9 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         .state('app.countries', {
             url: 'countries',
             views: {
+                'header@': {
+                    templateUrl: 'static/views/header3.html'
+                },
                 'content@': {
                     templateUrl: 'static/views/country_select.html',
                     controller: 'CountriesController'
@@ -53,6 +62,9 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         .state('app.countrylist', {
             url: 'countries/:slug',
             views: {
+                'header@': {
+                    templateUrl: 'static/views/header3.html'
+                },
                 'content@': {
                     templateUrl: 'static/views/country_list.html',
                     controller: 'CountryListController'
@@ -62,6 +74,9 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         .state('app.bd_countries', {
             url: 'bd_countries',
             views: {
+                'header@': {
+                    templateUrl: 'static/views/header5.html'
+                },
                 'content@': {
                     templateUrl: 'static/views/bd_country_select.html',
                     controller: 'BDController'
@@ -81,3 +96,11 @@ app.config(function ($stateProvider, $urlRouterProvider) {
 //    }
 //]);
 
+app.filter('nl2br', function($sce){
+    return function(msg,is_xhtml) {
+        var is_xhtml = is_xhtml || true;
+        var breakTag = (is_xhtml) ? '<br />' : '<br>';
+        var msg = (msg + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ breakTag +'$2');
+        return $sce.trustAsHtml(msg);
+    }
+});

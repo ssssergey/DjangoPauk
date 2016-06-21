@@ -1,10 +1,10 @@
 <div class="container" ng-controller="BDController">
     <h4>Данный сервис работает аналогично программе "Паук" и в будущем заменит ее.
-        Документы формируются
+        <br>Документы формируются
         в формате "docx", поддерживаемый версией Microsoft Word 2007 и более поздними.</h4>
 
     <div class="row">
-        <div class="col-xs-12" ng-if="!showItems">
+        <div class="col-xs-12 loading" ng-if="!showItems">
             <h3>[[ message ]]</h3>
             <img src="/static/img/loader.gif"/>
         </div>
@@ -16,7 +16,7 @@
                            class="btn btn-success country-btn">
                             <span class="glyphicon glyphicon-download"
                                   aria-hidden="true"></span><span class="country">&nbsp;&nbsp;&nbsp;[[ country.name ]]</span>
-                            <img class="flag" ng-src="static/img/[[ country.slug ]].png"/>
+                            <img class="flag" ng-src="static/img/flags/[[ country.slug ]].png"/>
                         </a>
 
                     </span>
