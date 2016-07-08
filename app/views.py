@@ -1,43 +1,26 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render, render_to_response, get_object_or_404
-from django.template import Context, RequestContext
-from django.template.loader import get_template
-from django.http import HttpResponse, Http404, HttpResponseRedirect
-from django.contrib import auth, messages
-from django.contrib.auth.models import User
+from django.shortcuts import render_to_response, get_object_or_404
+from django.template import RequestContext
+from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib import auth
 from DjangoPauk import settings
 
-from .models import News, Countries, UserCountry
-
-
-from datetime import datetime, date, time, timedelta
+from .models import News, Countries
 
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 # Create your views here.
 def index(request):
-    # User authentication
-    uid = request.COOKIES.get('uid')
-    if uid:
-        try:
-            user = User.objects.get(pk=int(uid))
-        except User.DoesNotExist:
-            user = create_new_user()
-            uid = user.id
-    else:
-        user = create_new_user()
-        uid = user.id
-    user.backend = 'django.contrib.auth.backends.ModelBackend'
-    auth.login(request, user)
     # countries = Countries.objects.order_by("name")
-    response = render_to_response('index.html', {'user': user}, context_instance=RequestContext(request))
-    response.set_cookie('uid', uid, max_age=60 * 60 * 24 * 365)
+    response = render_to_response('index.html', {}, context_instance=RequestContext(request))
     # countries = Countries.objects.order_by("name")
     return response
+
 
 def get_countries(request):
     countries = Countries.objects.all().order_by("name")
     return render_to_response('app/show_countries.html', locals())
+
 
 def show_all_articles(request):
     # country = Countries.objects.get(slug=slug)
@@ -93,20 +76,7 @@ def login(request):
     return render_to_response("login.html", context=RequestContext(request))
 
 
-def create_new_user():
-    '''
-    Helper function
-    :return: user object
-    '''
-    user = User.objects.create_user(username=u"Пользователь")
-    user.save()
-    user.username = u"Пользователь-{}".format(user.id)
-    user.save()
-    all_countries = Countries.objects.all()
-    for country in all_countries:
-        a = UserCountry(user=user, country=country, last_time=datetime.combine(date.today(), time()))
-        a.save()
-    return user
+
 
     # def get_str_date_time(datetime_format):
     #     month_names = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября',

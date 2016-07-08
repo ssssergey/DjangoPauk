@@ -4,6 +4,10 @@ from docx import Document
 from docx.shared import Cm, Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from datetime import datetime, date, time
+from django.contrib.auth.models import User
+from django.contrib import auth
+from django.shortcuts import render_to_response
+
 
 def get_news_set(request, slug):
     '''
@@ -21,6 +25,7 @@ def get_news_set(request, slug):
     q = q.filter(download_time__gt=last_article_time).order_by('pub_time')
     q = q.filter(country__slug=slug)
     return q, UC_obj
+
 
 def create_docx(q):
     document = Document()
@@ -105,4 +110,37 @@ def create_docx(q):
         article_body_format.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
 
         document.add_paragraph('')
-        return document
+    return document
+
+
+def create_new_user():
+    '''
+    Helper function
+    :return: user object
+    '''
+    user = User.objects.create_user(username=u"Пользователь")
+    user.save()
+    user.username = u"Пользователь-{}".format(user.id)
+    user.save()
+    all_countries = Countries.objects.all()
+    for country in all_countries:
+        a = UserCountry(user=user, country=country, last_time=datetime.combine(date.today(), time()))
+        a.save()
+    return user
+
+
+def auto_auth_new_user(request):
+    # User authentication
+    uid = request.COOKIES.get('uid')
+    if uid:
+        try:
+            user = User.objects.get(pk=int(uid))
+        except User.DoesNotExist:
+            user = create_new_user()
+            uid = user.id
+    else:
+        user = create_new_user()
+        uid = user.id
+    user.backend = 'django.contrib.auth.backends.ModelBackend'
+    auth.login(request, user)
+    return user, uid

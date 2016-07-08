@@ -3,11 +3,16 @@ from django.shortcuts import render_to_response
 from app.models import Countries
 from cStringIO import StringIO
 from datetime import datetime
-from atlant import get_news_set, create_docx
+from atlant import get_news_set, create_docx, auto_auth_new_user
 from django.http import HttpResponse, HttpResponseNotModified
+
+
 
 # Create your views here.
 def atlant_main(request):
+    user, uid = auto_auth_new_user(request)
+    # response = render_to_response('index.html', {'user': user}, context_instance=RequestContext(request))
+    # Make Countries
     countries = Countries.objects.all().order_by("name")
     for country in countries:
         q, UC_obj = get_news_set(request, country.slug)
@@ -18,12 +23,13 @@ def atlant_main(request):
             country.name = u'Ю.-В. Азия'
         elif country.name == u'Северный Кавказ':
             country.name = u'Сев. Кавказ'
-    return render_to_response('atlant/atlant_main.html', locals())
+    response = render_to_response('atlant/atlant_main.html', locals())
+    response.set_cookie('uid', uid, max_age=60 * 60 * 24 * 365)
+    return response
 
 
 def generate_doc(request):
     # selected_checkboxes = request.POST.getlist('ch_country')
-    print 'dddddddddddddddddddddddddddddddddddddd'
     slug = request.GET['slug']
     q, UC_obj = get_news_set(request, slug)
     if q.count() == 0:
