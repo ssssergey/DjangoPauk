@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load search_tags %}
+{% block header %}
+    <header class="intro-header" style="background-image: url('/static/img/mil-bg3.jpg'); height: 300px"></header>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <h1>{{ country.name }}</h1>
+        {% for p in results %}
+            {% include 'tags/article_thumbnail.html' %}
+        {% empty %}
+            Не найдено статей по данному запросу.
+        {% endfor %}
+        <div class="cb">&nbsp;</div>
+        {% pagination_links request paginator %}
+    </div>
+{% endblock %}
+
+

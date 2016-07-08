@@ -1,25 +1,38 @@
 <div class="container" ng-controller="BDController">
-    <h4>Данный сервис работает аналогично программе "Паук" и в будущем заменит ее.
-        <br>Документы формируются
-        в формате "docx", поддерживаемый версией Microsoft Word 2007 и более поздними.</h4>
-
     <div class="row">
         <div class="col-xs-12 loading" ng-if="!showItems">
             <h3>[[ message ]]</h3>
             <img src="/static/img/loader.gif"/>
         </div>
-        <div class="col-xs-12" ng-if="showItems" ng-controller="DocxController">
-                    <span ng-repeat="country in countries">
-                        <a id='[[ country.slug ]]'
-                           href="/api/generate_docx/?name=[[ country.name ]]&slug=[[ country.slug ]]"
-{#                           ng-click="download_docx($event, country.name, country.slug)"#}
-                           class="btn btn-success country-btn">
-                            <span class="glyphicon glyphicon-download"
-                                  aria-hidden="true"></span><span class="country">&nbsp;&nbsp;&nbsp;[[ country.name ]]</span>
-                            <img class="flag" ng-src="static/img/flags/[[ country.slug ]].png"/>
-                        </a>
-
-                    </span>
+        <div class="col-xs-12" ng-if="showItems">
+            <span ng-repeat="country in countries">
+                <a id='[[ country.slug ]]'
+                   href="/api-atlant/generate_docx/?name=[[ country.name ]]&slug=[[ country.slug ]]"
+                   class="btn btn-success country-btn">
+                    <table class="btn-table">
+                        <tr>
+                            <th style="width: 5%">
+                                <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                            </th>
+                            <th style="overflow: hidden; white-space: nowrap;width: 60%">
+                                <span class="country">&nbsp;&nbsp;&nbsp;[[ country.name ]]</span>
+                            </th>
+                            <th>
+                                <span class="quantity" style="font-size: 16px">&nbsp;&nbsp;[[ country.quantity ]]</span>
+                            </th>
+                            <th>
+                                <img class="flag" ng-src="static/img/flags/[[ country.slug ]].png"/>
+                            </th>
+                        </tr>
+                    </table>
+                </a>
+            </span>
         </div>
     </div>
+    <script>
+        $(document).on("click", ".country-btn", function () {
+            var $this = $(this);
+            $this.find(".quantity").html('&nbsp;&nbsp;0');
+        });
+    </script>
 </div>

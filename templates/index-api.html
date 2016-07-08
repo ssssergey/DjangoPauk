@@ -1,0 +1,132 @@
+{% load staticfiles %}
+{% load search_tags %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Военные новости</title>
+    <meta name='yandex-verification' content='57b30612ac65a24a'/>
+    <meta content='военные новости, военные учения, УБМ, армия, онлайн, on-line' name='keywords'/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet"/>
+    <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+    <link href='{% static "css/clean-blog.css" %}' rel='stylesheet' type='text/css'>
+    <link href='{% static "css/mystyle.css" %}' rel='stylesheet' type='text/css'>
+    <!-- Custom Fonts -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet"
+          type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet'
+          type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+          rel='stylesheet' type='text/css'>
+
+
+</head>
+
+<body ng-app="startPage">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" ui-sref="app">Паукпресс</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <div class="col-sm-3 col-md-3">
+                {% search_box request %}
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a ui-sref="app.countries">По странам</a>
+                </li>
+                <li>
+                    <a ui-sref="app.items">Общая лента новостей</a>
+                </li>
+                <li>
+                    <a ui-sref="app.bd_countries">Атлант</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+{#<div ng-controller="IndexController">#}
+<div ui-view="header"></div>
+<div ui-view="content" class="main-content"></div>
+<div ui-view="footer"></div>
+{#</div>#}
+
+</body>
+{#    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>#}
+<script src="{% static "js/jquery.js" %}"></script>
+<script src="{% static "js/bootstrap.min.js" %}"></script>
+<script src="{% static "js/clean-blog.js" %}"></script>
+<script src="{% static "js/angular.min.js" %}"></script>
+<script src="{% static "js/angular-route.js" %}"></script>
+<script src="{% static "js/angular-ui-router.js" %}"></script>
+<script src="{% static "js/angular-resource.js" %}"></script>
+<script src="{% static "js/angular-locale_ru-ru.js" %}"></script>
+<script src="{% static "js/app.js" %}"></script>
+<script src="{% static "js/controllers.js" %}"></script>
+<script src="{% static "js/services.js" %}"></script>
+
+
+<div style="position: fixed; bottom: 0px;">
+    <!-- Yandex.Metrika informer -->
+    <a href="https://metrika.yandex.ru/stat/?id=30940756&amp;from=informer"
+       target="_blank" rel="nofollow"><img src="//bs.yandex.ru/informer/30940756/1_0_F7F8FFFF_D7D8E0FF_0_pageviews"
+                                           style="width:80px; height:15px; border:0;" alt="Яндекс.Метрика"
+                                           title="Яндекс.Метрика: данные за сегодня (просмотры)"
+                                           onclick="try{Ya.Metrika.informer({i:this,id:30940756,lang:'ru'});return false}catch(e){}"/></a>
+    <!-- /Yandex.Metrika informer -->
+
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function (d, w, c) {
+            (w[c] = w[c] || []).push(function () {
+                try {
+                    w.yaCounter30940756 = new Ya.Metrika({
+                        id: 30940756,
+                        webvisor: true,
+                        clickmap: true,
+                        trackLinks: true,
+                        accurateTrackBounce: true
+                    });
+                } catch (e) {
+                }
+            });
+
+            var n = d.getElementsByTagName("script")[0],
+                    s = d.createElement("script"),
+                    f = function () {
+                        n.parentNode.insertBefore(s, n);
+                    };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+            if (w.opera == "[object Opera]") {
+                d.addEventListener("DOMContentLoaded", f, false);
+            } else {
+                f();
+            }
+        })(document, window, "yandex_metrika_callbacks");
+    </script>
+    <noscript>
+        <div><img src="//mc.yandex.ru/watch/30940756" style="position:absolute; left:-9999px;" alt=""/></div>
+    </noscript>
+    <!-- /Yandex.Metrika counter -->
+</div>
+
+</html>

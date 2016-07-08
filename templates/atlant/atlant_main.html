@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load search_tags %}
+
+{% block header %}
+    <header class="intro-header" style="background-image: url('/static/img/mil-bg5.jpg'); height: 300px"></header>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+            {% for country in countries %}
+                <a id='{{ country.slug }}' href="{% url 'atlant:generate_doc' %}?slug={{ country.slug }}"
+                   class="btn btn-success country-btn">
+                    <table class="btn-table">
+                        <tr>
+                            <th style="width: 5%">
+                                <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                            </th>
+                            <th style="overflow: hidden; white-space: nowrap;width: 60%">
+                                <span class="country">&nbsp;&nbsp;&nbsp;{{ country.name }}</span>
+                            </th>
+                            <th>
+                                <span class="quantity" style="font-size: 16px">&nbsp;&nbsp;{{ country.quantity }}</span>
+                            </th>
+                            <th>
+                                <img class="flag" src="/static/img/flags/{{ country.slug }}.png"/>
+                            </th>
+                        </tr>
+                    </table>
+                </a>
+            {% endfor %}
+            </div>
+        </div>
+        <script>
+            $(document).on("click", ".country-btn", function () {
+                var $this = $(this);
+                $this.find(".quantity").html('&nbsp;&nbsp;0');
+            });
+        </script>
+    </div>
+{% endblock %}
+
+

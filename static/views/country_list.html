@@ -7,9 +7,10 @@
         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1" ng-if="showItems">
             <ul class="plain-list">
                 <li ng-repeat="c_item in c_items.results">
+                    <h4>[[c_item.pub_time | date:'HH:mm:ss dd.MM.yyyy']]</h4>
                     <a ui-sref="app.itemdetails({id:c_item.id})"><h3>[[c_item.title]]</h3></a>
                     <h4>"[[c_item.rss]]"</h4>
-                    <h4>[[c_item.pub_time | date:'HH:mm:ss dd.MM.yyyy']]</h4>
+                    <hr>
                 </li>
             </ul>
         </div>

@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 
 
 # Create your models here.
@@ -20,6 +22,9 @@ class News(models.Model):
     download_time = models.DateTimeField()
     country = models.ForeignKey(Countries)
     link = models.TextField()
+
+    def get_absolute_url(self):
+        return reverse('app:show_article', args=(self.id,))
 
     class Meta:
         unique_together = ("title", "pub_time")

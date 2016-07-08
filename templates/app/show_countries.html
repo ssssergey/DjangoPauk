@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load search_tags %}
+
+{% block header %}
+<header class="intro-header" style="background-image: url('/static/img/mil-bg.jpg'); height: 300px"></header>
+{% endblock %}
+{% block content %}
+    <div class="container" align="center">
+        {% for country in countries %}
+            <a href="{% url 'app:list_by_country' country.slug %}"><h3>{{ country.name }}</h3></a>
+            <hr>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+

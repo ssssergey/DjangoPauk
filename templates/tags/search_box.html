@@ -1,0 +1,10 @@
+<form role="search" class="navbar-form navbar-right" id="search" action="{% url 'search:search_results' %}"
+      method="get">
+    <div class="input-group">
+        {{ form.q }}
+        <div class="input-group-btn">
+            <button class="btn btn-danger" type="submit"><span
+                    class="glyphicon glyphicon-search"></span></button>
+        </div>
+    </div>
+</form>

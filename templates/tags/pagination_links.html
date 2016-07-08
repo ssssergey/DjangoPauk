@@ -1,0 +1,31 @@
+{% if p.has_other_pages %}
+    <nav>
+        <ul class="pagination">
+            {% if p.has_previous %}
+                <li>
+                    <a href="{{ request.path }}?{{ params }}&page={{ p.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo; Предыдущая</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="disabled">
+
+                    <span aria-hidden="true">&laquo; Предыдущая</span>
+                </li>
+            {% endif %}
+            <li class="disabled"><a href="#">Страница {{ p.number }} из {{ paginator.num_pages }}</a></li>
+
+            {% if p.has_next %}
+                <li>
+                    <a href="{{ request.path }}?{{ params }}&page={{ p.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">Следующая &raquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="disabled">
+                    <span aria-hidden="true">Следующая &raquo;</span>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}

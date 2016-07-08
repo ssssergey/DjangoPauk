@@ -1,5 +1,19 @@
 'use strict';
 
+function findAndReplace(object, value, replacevalue) {
+  for (var x in object) {
+    if (object.hasOwnProperty(x)) {
+      if (typeof object[x] == 'object') {
+        findAndReplace(object[x], value, replacevalue);
+      }
+      if (object[x] == value) {
+        object["name"] = replacevalue;
+        // break; // uncomment to stop after first replacement
+      }
+    }
+  }
+}
+
 angular.module('startPage')
     .controller('IndexController', ['$scope', '$stateParams', 'itemsFactory',
         function ($scope, $stateParams, $itemsFactory) {
@@ -48,7 +62,7 @@ angular.module('startPage')
         function ($scope, $stateParams, $itemsFactory) {
             $scope.showItems = false;
             $scope.message = "Загрузка ...";
-            $itemsFactory.getCountries().query(
+            $itemsFactory.getCountryNames().query(
                 function (response) {
                     $scope.countries = response;
                     console.log($scope.countries);
@@ -81,10 +95,13 @@ angular.module('startPage')
         function ($scope, $http, $stateParams, $itemsFactory) {
             $scope.showItems = false;
             $scope.message = "Загрузка ...";
-            $itemsFactory.getCountries().query(
+            $itemsFactory.atlantCountries().query(
                 function (response) {
+                    console.log(response);
                     $scope.countries = response;
-                    console.log($scope.countries);
+                    findAndReplace($scope.countries, 'Латинская Америка', 'Лат. Америка')
+                    findAndReplace($scope.countries, 'Северный Кавказ', 'Сев. Кавказ')
+                    findAndReplace($scope.countries, 'ЮгоВосточная Азия', 'Ю.-В. Азия')
                     $scope.showItems = true;
                 },
                 function (response) {
@@ -93,43 +110,6 @@ angular.module('startPage')
             );
 
         }
-    ])
-    .controller('DocxController', ['$scope', '$stateParams', '$http',
-        function ($scope, $stateParams, $http) {
-            $scope.download_docx = function (e, country_name, country_slug) {
-            //    $itemsFactory.download().get({country_name: country_name, country_slug: country_slug})
-            //    .$promise.then(
-            //    function (response) {
-            //        $scope.item = response;
-            //        console.log($scope.item);
-            //    },
-            //    function (response) {
-            //        $scope.message = "Ошибка: " + response.status + " " + response.statusText;
-            //    }
-            //);
-
-                //$.get('/api/generate_docx/?name=' + country_name + '&slug=' + country_slug, function(data){
-                //    console.log(data)
-                //});
-
-                //$http.get('/api/generate_docx/?name=' + country_name + '&slug=' + country_slug, {
-                //    responseType: 'arraybuffer', headers: {
-                //        'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-                //    }
-                //})
-                //    .then(function (data, status, headers, config) {
-                //        $scope.count = data['headers']('Count');
-                //        console.log($scope.count);
-                //        var country = e.currentTarget.innerHTML;
-                //        e.currentTarget.innerHTML = 'Скачано ' + $scope.count;
-                //        setTimeout(function () {
-                //            e.currentTarget.innerHTML = country
-                //        }, 2000);
-                //    }, function (response) {
-                //        // called asynchronously if an error occurs
-                //        // or server returns response with an error status.
-                //    });
-            };
-        }
     ]);
+
 

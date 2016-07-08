@@ -12,13 +12,14 @@ SECRET_KEY = secret_key
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-if os.name == 'nt':
-    DEBUG = True
-else:
-    DEBUG = False
-
+# if os.name == 'nt':
+#     DEBUG = True
+# else:
+#     DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ['*']
 
+ARTICLES_PER_PAGE = 20
 
 # Application definition
 
@@ -31,6 +32,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'app',
+    'search',
+    'atlant'
 ]
 
 REST_FRAMEWORK = {
@@ -61,7 +64,10 @@ ROOT_URLCONF = 'DjangoPauk.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates').replace('\\','/'), os.path.join(BASE_DIR, 'static/views').replace('\\','/')],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates').replace('\\','/'),
+            os.path.join(BASE_DIR, 'static/views').replace('\\','/')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
