@@ -10,6 +10,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = secret_key
 
+SITE_ID = 1
 # SECURITY WARNING: don't run with debug turned on in production!
 
 # if os.name == 'nt':
@@ -30,10 +31,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
+    'django.contrib.sitemaps',
     'rest_framework',
     'app',
     'search',
-    'atlant'
+    'atlant',
+    'marketing'
 ]
 
 REST_FRAMEWORK = {
@@ -56,6 +61,8 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+
     # 'corsheaders.middleware.CorsMiddleware',
 ]
 
@@ -65,8 +72,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'templates').replace('\\','/'),
-            os.path.join(BASE_DIR, 'static/views').replace('\\','/')
+            os.path.join(BASE_DIR, 'templates').replace('\\', '/'),
+            os.path.join(BASE_DIR, 'static/views').replace('\\', '/')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -137,8 +144,6 @@ if os.name != 'nt':
     STATIC_ROOT = '/var/www/DjangoPauk/static'
 else:
     STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-
-
 
 STATIC_URL = '/static/'
 

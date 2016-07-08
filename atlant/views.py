@@ -11,7 +11,6 @@ from django.http import HttpResponse, HttpResponseNotModified
 # Create your views here.
 def atlant_main(request):
     user, uid = auto_auth_new_user(request)
-    # response = render_to_response('index.html', {'user': user}, context_instance=RequestContext(request))
     # Make Countries
     countries = Countries.objects.all().order_by("name")
     for country in countries:

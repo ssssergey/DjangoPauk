@@ -11,8 +11,12 @@ class Countries(models.Model):
     name = models.TextField(primary_key=True)
     users = models.ManyToManyField(User, related_name='countries', through='UserCountry')
 
+    def get_absolute_url(self):
+        return reverse('app:list_by_country', args=(self.slug,))
+
     def __unicode__(self):
         return self.name
+
 
 class News(models.Model):
     rss = models.TextField()
@@ -32,6 +36,7 @@ class News(models.Model):
 
     def __unicode__(self):
         return self.title
+
 
 class UserCountry(models.Model):
     user = models.ForeignKey(User)

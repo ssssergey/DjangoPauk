@@ -1,6 +1,8 @@
 from django.conf.urls import url, include
 from django.contrib import admin
 from app.views import index
+from marketing.sitemap import SITEMAPS
+from django.contrib.sitemaps.views import sitemap
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -10,4 +12,6 @@ urlpatterns = [
     url(r'^search/', include('search.urls', namespace="search")),
     url(r'^atlant/', include('atlant.urls', namespace="atlant")),
     url(r'^api-atlant/', include('atlant.api.urls', namespace="api-atlant")),
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': SITEMAPS}),
+
 ]
