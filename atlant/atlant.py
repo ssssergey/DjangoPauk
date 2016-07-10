@@ -18,13 +18,26 @@ def get_news_set(request, slug):
     '''
     country_obj = Countries.objects.get(slug=slug)
     # slug = Countries.objects.get(name=country).slug
-    UC_obj = UserCountry.objects.get(user=request.user, country=country_obj)
+    try:
+        UC_obj = UserCountry.objects.get(user=request.user, country=country_obj)
+    except UserCountry.DoesNotExist:
+        create_usercountry_objects(request.user)
+        UC_obj = UserCountry.objects.get(user=request.user, country=country_obj)
     last_article_time = UC_obj.last_time
     q = News.objects.all()
     q = q.filter(pub_time__gt=datetime.combine(date.today(), time()))
     q = q.filter(download_time__gt=last_article_time).order_by('pub_time')
     q = q.filter(country__slug=slug)
     return q, UC_obj
+
+def create_usercountry_objects(user):
+    all_countries = Countries.objects.all()
+    for country in all_countries:
+        a = UserCountry(user=user, country=country, last_time=datetime.combine(date.today(), time()))
+        a.save()
+    return user
+
+
 
 
 def create_docx(q):
@@ -113,34 +126,30 @@ def create_docx(q):
     return document
 
 
-def create_new_user():
-    '''
-    Helper function
-    :return: user object
-    '''
-    user = User.objects.create_user(username=u"Пользователь")
-    user.save()
-    user.username = u"Пользователь-{}".format(user.id)
-    user.save()
-    all_countries = Countries.objects.all()
-    for country in all_countries:
-        a = UserCountry(user=user, country=country, last_time=datetime.combine(date.today(), time()))
-        a.save()
-    return user
+# def create_new_user():
+#     '''
+#     Helper function
+#     :return: user object
+#     '''
+#     user = User.objects.create_user(username=u"Пользователь")
+#     user.save()
+#     user.username = u"Пользователь-{}".format(user.id)
+#     user.save()
+#     create_usercountry_objects(user)
+#     return user
 
-
-def auto_auth_new_user(request):
-    # User authentication
-    uid = request.COOKIES.get('uid')
-    if uid:
-        try:
-            user = User.objects.get(pk=int(uid))
-        except User.DoesNotExist:
-            user = create_new_user()
-            uid = user.id
-    else:
-        user = create_new_user()
-        uid = user.id
-    user.backend = 'django.contrib.auth.backends.ModelBackend'
-    auth.login(request, user)
-    return user, uid
+# def auto_auth_new_user(request):
+#     # User authentication
+#     uid = request.COOKIES.get('uid')
+#     if uid:
+#         try:
+#             user = User.objects.get(pk=int(uid))
+#         except User.DoesNotExist:
+#             user = create_new_user()
+#             uid = user.id
+#     else:
+#         user = create_new_user()
+#         uid = user.id
+#     user.backend = 'django.contrib.auth.backends.ModelBackend'
+#     auth.login(request, user)
+#     return user, uid

@@ -5,7 +5,7 @@
 {% endblock %}
 {% block content %}
     <div class="container">
-        <h1>{{ country.name }}</h1>
+        <h1 align="center">{{ country.name }}</h1>
         {% for p in results %}
             {% include 'tags/article_thumbnail.html' %}
         {% empty %}

@@ -3,14 +3,19 @@ from django.shortcuts import render_to_response
 from app.models import Countries
 from cStringIO import StringIO
 from datetime import datetime
-from atlant import get_news_set, create_docx, auto_auth_new_user
+from atlant import get_news_set, create_docx
 from django.http import HttpResponse, HttpResponseNotModified
-
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
+@login_required
 def atlant_main(request):
-    user, uid = auto_auth_new_user(request)
+    # user, uid = auto_auth_new_user(request)
+    tracking_id = request.session.get('tracking_id', '')
+    if not tracking_id:
+        tracking_id = request.user.id
+        request.session['tracking_id'] = tracking_id
     # Make Countries
     countries = Countries.objects.all().order_by("name")
     for country in countries:
@@ -22,8 +27,9 @@ def atlant_main(request):
             country.name = u'Ю.-В. Азия'
         elif country.name == u'Северный Кавказ':
             country.name = u'Сев. Кавказ'
+    user = request.user
     response = render_to_response('atlant/atlant_main.html', locals())
-    response.set_cookie('uid', uid, max_age=60 * 60 * 24 * 365)
+    # response.set_cookie('uid', uid, max_age=60 * 60 * 24 * 365)
     return response
 
 

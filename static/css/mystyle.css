@@ -54,3 +54,7 @@ img.flag {
     width: 100%;
     text-align: left;
 }
+
+a.blue {
+    color: #3968ba;
+}

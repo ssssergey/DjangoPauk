@@ -19,6 +19,7 @@ def index(request):
 
 def get_countries(request):
     countries = Countries.objects.all().order_by("name")
+    user = request.user
     return render_to_response('app/show_countries.html', locals())
 
 
@@ -36,6 +37,7 @@ def show_all_articles(request):
         results = paginator.page(page).object_list
     except (InvalidPage, EmptyPage):
         results = paginator.page(1).object_list
+    user = request.user
     return render_to_response('app/show_all_articles.html', locals())
 
 
@@ -54,26 +56,19 @@ def show_country_articles(request, slug):
         results = paginator.page(page).object_list
     except (InvalidPage, EmptyPage):
         results = paginator.page(1).object_list
+    page_title = country.name
+    user = request.user
     return render_to_response('app/show_articles_by_country.html', locals())
 
 
 def show_article(request, news_id):
     # news = News.objects.get(id=news_id)
     article = get_object_or_404(News, id=news_id)
+    user = request.user
     return render_to_response('app/show_article.html', locals())
 
 
-def login(request):
-    if request.method == 'POST':
-        username = request.POST.get('username', '')
-        password = request.POST.get('password', '')
-        user = auth.authenticate(username=username, password=password)
-        if user and user.is_active:
-            auth.login(request, user)
-            return HttpResponseRedirect('/')
-        else:
-            return HttpResponse(u'Неправильные данные')
-    return render_to_response("login.html", context=RequestContext(request))
+
 
 
 

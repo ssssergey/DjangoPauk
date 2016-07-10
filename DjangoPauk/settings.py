@@ -18,11 +18,12 @@ SITE_ID = 1
 # else:
 #     DEBUG = False
 DEBUG = True
+
 ALLOWED_HOSTS = ['*']
 
 ARTICLES_PER_PAGE = 20
 
-# Application definition
+LOGIN_REDIRECT_URL = '/atlant/'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -38,7 +39,8 @@ INSTALLED_APPS = [
     'app',
     'search',
     'atlant',
-    'marketing'
+    'marketing',
+    'accounts',
 ]
 
 REST_FRAMEWORK = {
